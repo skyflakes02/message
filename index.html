@@ -4,7 +4,6 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Message</title>
-    <!-- Include Font Awesome CDN for the heart icon -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
 
     <style>
@@ -39,7 +38,7 @@
             padding: 10px;
             resize: none;
             width: 200px;
-            margin-left: 10px; /* Adjust the margin as needed */
+            margin-left: 10px; 
             border: none;
             border-radius: 5px;
         }
@@ -79,7 +78,7 @@
         let dayCounter = 0;
 
         function promptForName() {
-            const name = prompt("Please enter your name:");
+            const name = prompt("Enter your name:");
             if (name) {
                 updateGreeting(name);
             }
@@ -93,7 +92,7 @@
         }
 
         window.onload = function () {
-            promptForName(); // Automatically prompt for the name
+            promptForName(); 
         };
 
         function displayLove() {
