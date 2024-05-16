@@ -52,10 +52,14 @@ class PipeGame(pg.PyxelGrid[CellState]):
         # TODO: Implement game logic to check connections and update cell states
 
     def draw_cell(self, i: int, j: int, x: int, y: int) -> None:
-        cell = self.grid[i][j]
-        u = cell.pipe_type * pl.DIM
-        v = cell.rotation * pl.DIM
-        pyxel.blt(x, y, 0, u, v, pl.DIM, pl.DIM)
+    cell = self.grid[i][j]
+    u = cell.pipe_type * pl.DIM
+    v = cell.rotation * pl.DIM
+    
+    # Check if the pipe is connected, and choose color accordingly
+    color = 11 if cell.connected else 7  # Use color 11 for connected pipes, 7 for others
+    
+    pyxel.blt(x, y + 20, 0, u, v, pl.DIM, pl.DIM, colorkey=0)
 
     def pre_draw_grid(self) -> None:
         pyxel.cls(0)  # Clear the screen with black
