@@ -61,8 +61,13 @@ class PipeGame(pg.PyxelGrid[CellState]):
         pyxel.cls(0)  # Clear the screen with black
 
     def post_draw_grid(self) -> None:
-        # Optionally draw additional UI elements here
-        pass
+        # Draw the elapsed time
+        elapsed_seconds = (pyxel.frame_count - self.start_time) // FPS
+        pyxel.text(5, 5, f"Time: {elapsed_seconds}s", 7)
+
+        # Draw the "N = New Game" text
+        pyxel.text(pyxel.width - 60, 5, "N = New Game", 7)
+
 
 
 def main():
