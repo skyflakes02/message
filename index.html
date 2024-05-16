@@ -48,6 +48,19 @@ class PipeGame(pg.PyxelGrid[CellState]):
             i, j = self.mouse_cell()
             if 0 <= i < self.settings.r and 0 <= j < self.settings.c:
                 self.grid[i][j].rotation = (self.grid[i][j].rotation + 1) % 4
+for i in range(self.settings.r):
+            for j in range(self.settings.c):
+                cell = self.grid[i][j]
+                if cell.connected:
+                    continue
+                for dx, dy in [(0, 1), (1, 0), (0, -1), (-1, 0)]:
+                    ni, nj = i + dx, j + dy
+                    if 0 <= ni < self.settings.r and 0 <= nj < self.settings.c:
+                        neighbor = self.grid[ni][nj]
+                        if (cell.pipe_type == neighbor.pipe_type) and (cell.rotation + 2) % 4 == neighbor.rotation:
+                            cell.connect()
+                            neighbor.connect()
+                            break
 
         # TODO: Implement game logic to check connections and update cell states
 
