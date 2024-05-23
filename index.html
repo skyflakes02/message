@@ -1,21 +1,22 @@
 import pyxel
 
-# Initialize constants
 SCREEN_WIDTH = 160
 SCREEN_HEIGHT = 120
 TANK_SPEED = 2
-TANK_SPRITE_SIZE = 16  # Assuming each sprite is 16x16 pixels
+TANK_SPRITE_SIZE = 16 
 
-# Tank directions
 UP, RIGHT, DOWN, LEFT = 0, 1, 2, 3
 
-class TankGame:
+class BattleCity:
     def __init__(self):
         pyxel.init(SCREEN_WIDTH, SCREEN_HEIGHT, title="Tank Game")
         pyxel.load("tank.pyxres")
         self.tank_x = SCREEN_WIDTH // 2
         self.tank_y = SCREEN_HEIGHT // 2
         self.tank_direction = UP
+        self.tank_direction = RIGHT
+        self.tank_direction = DOWN
+        self.tank_direction = LEFT
         pyxel.run(self.update, self.draw)
 
     def update(self):
@@ -32,14 +33,11 @@ class TankGame:
             self.tank_x += TANK_SPEED
             self.tank_direction = RIGHT
 
-        # Ensure the tank does not go out of bounds
         self.tank_x = max(0, min(self.tank_x, SCREEN_WIDTH - TANK_SPRITE_SIZE))
         self.tank_y = max(0, min(self.tank_y, SCREEN_HEIGHT - TANK_SPRITE_SIZE))
 
     def draw(self):
         pyxel.cls(0)
-        # Draw the tank based on its direction
         pyxel.blt(self.tank_x, self.tank_y, 0, self.tank_direction * TANK_SPRITE_SIZE, 0, TANK_SPRITE_SIZE, TANK_SPRITE_SIZE, 0)
 
-# Start the game
-TankGame()
+BattleCity()
