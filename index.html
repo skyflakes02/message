@@ -34,17 +34,17 @@ class Stone:
         self.y = y
 
     def draw(self):
-        pyxel.blt(self.x, self.y, 1, 0, 0, STONE_SIZE, STONE_SIZE, 0)
+        pyxel.blt(self.x, self.y, 0, 16, 0, STONE_SIZE, STONE_SIZE, 0)  # Adjust the index (0) and position (16, 0) according to your stone cell image
 
 class BattleCity:
     def __init__(self):
         pyxel.init(SCREEN_WIDTH, SCREEN_HEIGHT, title="Tank Game")
-        pyxel.load("tank.pyxres")
+        pyxel.load("tank.pyxres")  # Load your sprite sheet file
         self.tank_x = SCREEN_WIDTH // 2
         self.tank_y = SCREEN_HEIGHT // 2
         self.tank_direction = UP
         self.bullets = []
-        self.stone_cells = [Stone(40, 40), Stone(80, 80)]
+        self.stone_cells = [Stone(40, 40), Stone(80, 80)]  # Example stone cells
         pyxel.run(self.update, self.draw)
 
     def update(self):
