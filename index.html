@@ -32,7 +32,7 @@ class Stone:
     def __init__(self, x, y):
         self.x = x
         self.y = y
-        self.exists = True  # Boolean attribute to indicate whether the stone is present or destroyed
+        self.exists = True
 
     def draw(self):
         if self.exists:
@@ -46,7 +46,7 @@ class BattleCity:
         self.tank_y = SCREEN_HEIGHT // 2
         self.tank_direction = UP
         self.bullets = []
-        self.stone_cells = [Stone(40, 40), Stone(80, 80), Stone(120, 40), Stone(40, 80)]  # Example stone cells
+        self.stone_cells = [Stone(40, 40), Stone(80, 80), Stone(120, 40), Stone(40, 80)]
         pyxel.run(self.update, self.draw)
 
     def update(self):
@@ -79,8 +79,8 @@ class BattleCity:
     def handle_bullet_collision(self):
         for bullet in self.bullets:
             for stone_cell in self.stone_cells:
-                if bullet.x + 2 >= stone_cell.x and bullet.x <= stone_cell.x + STONE_SIZE and bullet.y + 2 >= stone_cell.y and bullet.y <= stone_cell.y + STONE_SIZE:
-                    bullet_exists = False  # Variable to check if the bullet has hit any stone cell
+                if stone_cell.exists and bullet.x + 2 >= stone_cell.x and bullet.x <= stone_cell.x + STONE_SIZE and bullet.y + 2 >= stone_cell.y and bullet.y <= stone_cell.y + STONE_SIZE:
+                    bullet_exists = False
                     if bullet.direction == UP:
                         if bullet.y < stone_cell.y:
                             bullet.direction = RIGHT
@@ -101,7 +101,8 @@ class BattleCity:
                             bullet.direction = UP
                         else:
                             bullet.direction = DOWN
-                    stone_cell.exists = False  # Destroy the stone cell
+                    if bullet_exists:
+                        stone_cell.exists = False
                     break
 
     def shoot_bullet(self):
