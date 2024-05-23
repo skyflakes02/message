@@ -3,30 +3,10 @@ import pyxel
 SCREEN_WIDTH = 160
 SCREEN_HEIGHT = 120
 TANK_SPEED = 2
-TANK_SPRITE_SIZE = 16 
+TANK_SPRITE_SIZE = 16
 BULLET_SPEED = 4
-BULLET_SIZE = 4
 
 UP, RIGHT, DOWN, LEFT = 0, 1, 2, 3
-
-class Bullet:
-    def __init__(self, x, y, direction):
-        self.x = x
-        self.y = y
-        self.direction = direction
-    
-    def update(self):
-        if self.direction == UP:
-            self.y -= BULLET_SPEED
-        elif self.direction == DOWN:
-            self.y += BULLET_SPEED
-        elif self.direction == LEFT:
-            self.x -= BULLET_SPEED
-        elif self.direction == RIGHT:
-            self.x += BULLET_SPEED
-
-    def draw(self):
-        pyxel.rect(self.x, self.y, BULLET_SIZE, BULLET_SIZE, 7)
 
 class BattleCity:
     def __init__(self):
@@ -39,7 +19,6 @@ class BattleCity:
         pyxel.run(self.update, self.draw)
 
     def update(self):
-        # Tank movement
         if pyxel.btn(pyxel.KEY_W):
             self.tank_y -= TANK_SPEED
             self.tank_direction = UP
@@ -52,28 +31,49 @@ class BattleCity:
         elif pyxel.btn(pyxel.KEY_D):
             self.tank_x += TANK_SPEED
             self.tank_direction = RIGHT
+        
+        if pyxel.btnp(pyxel.KEY_SPACE):
+            self.shoot_bullet()
 
-        # Boundaries for tank
         self.tank_x = max(0, min(self.tank_x, SCREEN_WIDTH - TANK_SPRITE_SIZE))
         self.tank_y = max(0, min(self.tank_y, SCREEN_HEIGHT - TANK_SPRITE_SIZE))
 
-        # Shooting
-        if pyxel.btnp(pyxel.KEY_SPACE):
-            bullet_x = self.tank_x + (TANK_SPRITE_SIZE // 2) - (BULLET_SIZE // 2)
-            bullet_y = self.tank_y + (TANK_SPRITE_SIZE // 2) - (BULLET_SIZE // 2)
-            self.bullets.append(Bullet(bullet_x, bullet_y, self.tank_direction))
+        self.update_bullets()
 
-        # Update bullets
+    def shoot_bullet(self):
+        if self.tank_direction == UP:
+            bullet_x = self.tank_x + TANK_SPRITE_SIZE // 2
+            bullet_y = self.tank_y
+            bullet_dx, bullet_dy = 0, -BULLET_SPEED
+        elif self.tank_direction == DOWN:
+            bullet_x = self.tank_x + TANK_SPRITE_SIZE // 2
+            bullet_y = self.tank_y + TANK_SPRITE_SIZE
+            bullet_dx, bullet_dy = 0, BULLET_SPEED
+        elif self.tank_direction == LEFT:
+            bullet_x = self.tank_x
+            bullet_y = self.tank_y + TANK_SPRITE_SIZE // 2
+            bullet_dx, bullet_dy = -BULLET_SPEED, 0
+        elif self.tank_direction == RIGHT:
+            bullet_x = self.tank_x + TANK_SPRITE_SIZE
+            bullet_y = self.tank_y + TANK_SPRITE_SIZE // 2
+            bullet_dx, bullet_dy = BULLET_SPEED, 0
+        
+        self.bullets.append((bullet_x, bullet_y, bullet_dx, bullet_dy))
+
+    def update_bullets(self):
+        new_bullets = []
         for bullet in self.bullets:
-            bullet.update()
-
-        # Remove bullets that go off-screen
-        self.bullets = [bullet for bullet in self.bullets if 0 <= bullet.x < SCREEN_WIDTH and 0 <= bullet.y < SCREEN_HEIGHT]
+            bullet_x, bullet_y, bullet_dx, bullet_dy = bullet
+            bullet_x += bullet_dx
+            bullet_y += bullet_dy
+            if 0 <= bullet_x < SCREEN_WIDTH and 0 <= bullet_y < SCREEN_HEIGHT:
+                new_bullets.append((bullet_x, bullet_y, bullet_dx, bullet_dy))
+        self.bullets = new_bullets
 
     def draw(self):
         pyxel.cls(0)
         pyxel.blt(self.tank_x, self.tank_y, 0, self.tank_direction * TANK_SPRITE_SIZE, 0, TANK_SPRITE_SIZE, TANK_SPRITE_SIZE, 0)
-        for bullet in self.bullets:
-            bullet.draw()
+        for bullet_x, bullet_y, bullet_dx, bullet_dy in self.bullets:
+            pyxel.pix(bullet_x, bullet_y, 7)
 
 BattleCity()
