@@ -70,7 +70,25 @@ class BattleCity:
         for bullet in self.bullets:
             bullet.update()
 
+        self.handle_bullet_collision()
+
         self.bullets = [bullet for bullet in self.bullets if not bullet.is_off_screen()]
+
+    def handle_bullet_collision(self):
+        for bullet in self.bullets:
+            for stone_cell in self.stone_cells:
+                if bullet.x + 2 >= stone_cell.x and bullet.x <= stone_cell.x + STONE_SIZE and bullet.y + 2 >= stone_cell.y and bullet.y <= stone_cell.y + STONE_SIZE:
+                    # Bullet collided with a stone cell
+                    # Calculate new direction based on angle of reflection
+                    dx = bullet.x - (stone_cell.x + STONE_SIZE // 2)
+                    dy = bullet.y - (stone_cell.y + STONE_SIZE // 2)
+                    if dx != 0:
+                        angle = math.atan(dy / dx)
+                    else:
+                        angle = math.pi / 2 if dy > 0 else -math.pi / 2
+                    new_direction = (2 * angle - bullet.direction) % (2 * math.pi)
+                    bullet.direction = new_direction
+                    break
 
     def shoot_bullet(self):
         bullet_x = self.tank_x + TANK_SPRITE_SIZE // 2 - 2
